@@ -1,5 +1,5 @@
 module.exports=althea=>{
-    althea.addPagemodule('sitemap.xml',pagemodule)
+    althea.addPagemodule('/sitemap.xml',pagemodule)
 }
 function pagemodule(env){
     if(
