@@ -1,6 +1,5 @@
-module.exports=althea=>{
+module.exports=althea=>
     althea.addPagemodule('/sitemap.xml',pagemodule)
-}
 function pagemodule(env){
     if(!env.althea.allowOrigin(env.envVars,env.request.headers.origin))
         return 403
@@ -21,7 +20,7 @@ function get(env){
     }))
 }
 function calcContent(env){
-    return getPages(env.database.pool).then(rows=>{
+    return getPages(env.database).then(rows=>{
         env.headers['content-type']='text/xml'
         env.response.writeHead(200,env.headers)
         let res=''
@@ -44,12 +43,10 @@ function calcContent(env){
         return res
     })
 }
-function getPages(pool){
-    return new Promise((rs,rj)=>{
-        pool.query(`
-            select id
-            from pages
-            where !isremoved && ispublic
-        `,(err,rows)=>err?rj(err):rs(rows))
-    })
+function getPages(db){
+    return db.query0(`
+        select id
+        from page
+        where !isremoved && ispublic
+    `)
 }
