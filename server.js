@@ -11,42 +11,39 @@ function pagemodule(env){
         headers:env.headers,
     }
 }
-function get(env){
+async function get(env){
     env.headers['content-type']='text/xml'
-    return calcContent(env).then(res=>({
+    let res=await calcContent(env)
+    return{
         status:200,
         headers:env.headers,
         content:res,
-    }))
+    }
 }
-function calcContent(env){
-    return getPages(env.database).then(rows=>{
-        env.headers['content-type']='text/xml'
-        env.response.writeHead(200,env.headers)
-        let res=''
-        res+=`<?xml version="1.0" encoding="UTF-8"?>
+async function calcContent(env){
+    let rows=await env.database.query0(`
+        select id
+        from page
+        where !isremoved && ispublic
+    `)
+    env.headers['content-type']='text/xml'
+    env.response.writeHead(200,env.headers)
+    let res=''
+    res+=`<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>${env.environmentvariables.clientUrlRoot}</loc>
 </url>
         `
-        rows.forEach(row=>{
-            res+=`
+    rows.map(row=>
+        res+=`
 <url>
 <loc>${env.environmentvariables.clientUrlRoot+row.id}</loc>
 </url>
-            `
-        })
-        res+=`
-</urlset>
         `
-        return res
-    })
-}
-function getPages(db){
-    return db.query0(`
-        select id
-        from page
-        where !isremoved && ispublic
-    `)
+    )
+    res+=`
+</urlset>
+    `
+    return res
 }
