@@ -1,5 +1,6 @@
-module.exports=althea=>
+module.exports=function(althea){
     althea.addPagemodule('/sitemap.xml',pagemodule)
+}
 function pagemodule(env){
     if(!env.althea.allowOrigin(env.envVars,env.request.headers.origin))
         return 403
