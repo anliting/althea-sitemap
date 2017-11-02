@@ -24,7 +24,7 @@ async function get(env){
 async function calcContent(env){
     let rows=await env.database.query0(`
         select id
-        from page
+        from blog_page
         where !isremoved && ispublic
     `)
     env.headers['content-type']='text/xml'
