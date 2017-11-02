@@ -33,13 +33,13 @@ async function calcContent(env){
     res+=`<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>${env.environmentvariables.clientUrlRoot}</loc>
+<loc>/</loc>
 </url>
         `
     rows.map(row=>
         res+=`
 <url>
-<loc>${env.environmentvariables.clientUrlRoot+row.id}</loc>
+<loc>/${row.id}</loc>
 </url>
         `
     )
